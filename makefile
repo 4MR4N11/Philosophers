@@ -1,5 +1,5 @@
 SRCS =	philo.c\
-		parcer.c\
+		parser.c\
 		ft_atoi.c
 
 NAME = philo

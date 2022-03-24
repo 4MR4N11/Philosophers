@@ -5,19 +5,24 @@
 #define MIN_INT -2147483648
 
 #include <stdio.h>
+#include <sys/time.h>
+#include <stdlib.h>
 
-typedef struct s_data
+typedef struct s_philos
 {
-    int philos;
     int to_die;
     int to_eat;
     int to_sleep;
     int eat_times;
-	
-} t_data;
+} t_philos;
+
+typedef struct s_data
+{
+    int numofphils;
+}   t_data;
 
 int	ft_atoi(const char *str);
-int	parcing(char **av, t_data *ptr);
+t_philos	*parsing(char **av, t_data *tmp);
 
 
 #	endif
