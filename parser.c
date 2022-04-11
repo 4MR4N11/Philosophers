@@ -6,17 +6,23 @@
 /*   By: kel-amra <kel-amra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 18:26:55 by kel-amra          #+#    #+#             */
-/*   Updated: 2022/03/24 20:45:29 by kel-amra         ###   ########.fr       */
+/*   Updated: 2022/04/11 02:33:38 by kel-amra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "includes.h"
 #include <unistd.h>
 
-// void	get_time(t_data *ptr)
-// {
-	
-// }
+long	get_time(void)
+{
+	long	time;
+	struct timeval current_time;
+	if(gettimeofday(&current_time, NULL))
+		return -1;
+	time = ((current_time.tv_sec * 1000) + (current_time.tv_usec / 1000));
+	return (time);
+}
+
 static	int	args_checker(char **av)
 {
 	int	i;
@@ -30,28 +36,30 @@ static	int	args_checker(char **av)
 	return (0);
 }
 
-t_philos	*parsing(char **av, t_data *tmp)
+int	parsing(char **av, t_data *tmp)
 {
-	t_philos *ptr;
+	// t_philos *ptr;
 	int i;
 
 	if(args_checker(av))
-		return (NULL);
+		return (1);
 	tmp->numofphils = ft_atoi(av[0]);
 	if(tmp->numofphils <= 0)
-		return (NULL);
-	ptr = malloc(sizeof(t_philos) * tmp->numofphils);
-	if(!ptr)
-		return (NULL);
+		return (1);
+	tmp->forks = ft_atoi(av[0]);
+	tmp->philos = malloc(sizeof(t_philos) * tmp->numofphils);
+	if(!tmp->philos)
+		return (1);
 	i = 0;	
 	while(i < tmp->numofphils)
 	{
-		ptr[i].to_die = ft_atoi(av[0]);
-		ptr[i].to_eat = ft_atoi(av[1]);
-		ptr[i].to_sleep = ft_atoi(av[2]);
-		if(av[3])
-			ptr[i].eat_times = ft_atoi(av[3]);
+		tmp->philos[i].index = i+1;
+		tmp->philos[i].to_die = ft_atoi(av[1]);
+		tmp->philos[i].to_eat = ft_atoi(av[2]);
+		tmp->philos[i].to_sleep = ft_atoi(av[3]);
+		if(av[4])
+			tmp->philos[i].eat_times = ft_atoi(av[4]);
 		i++;
 	}
-	return (ptr);
+	return (0);
 }
