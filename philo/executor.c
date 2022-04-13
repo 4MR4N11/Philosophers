@@ -6,7 +6,7 @@
 /*   By: kel-amra <kel-amra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/26 15:16:54 by kel-amra          #+#    #+#             */
-/*   Updated: 2022/04/13 03:28:01 by kel-amra         ###   ########.fr       */
+/*   Updated: 2022/04/13 20:52:43 by kel-amra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,20 +15,14 @@
 void	message(char msg, t_philos *philo)
 {
 	pthread_mutex_lock(&philo->data->msg);
-	if(msg == 'f')
+	if(msg == 'F')
 		printf("%ld [%d] has taken a \033[1;34mfork\e[0m\n", get_time(),philo->index);
-	else if(msg == 'e')
+	else if(msg == 'E')
 		printf("%ld [%d] is \033[1;34meating\e[0m\n",get_time() ,philo->index);
-	else if(msg == 's')
+	else if(msg == 'S')
 		printf("%ld [%d] is \033[1;34msleeping\e[0m\n", get_time(),philo->index);
-	else if(msg == 't')
+	else if(msg == 'T')
 		printf("%ld [%d] is \033[1;34mthinking\e[0m\n", get_time(),philo->index);
-	else if(msg == 'd')
-	{
-		printf("%ld [%d] \033[1;31mdied\e[0m\n", get_time(),philo->index);
-		pthread_mutex_unlock(&philo->data->program);
-		return ;
-	}
 	pthread_mutex_unlock(&philo->data->msg);	
 }
 
@@ -47,14 +41,16 @@ void	*check_death(void *ptr)
 	t_philos *philo;
 	
 	philo = (t_philos *)ptr;
+	pthread_mutex_init(&philo->data->tmp, NULL);
 	while(1)
 	{
 		if(get_time() > (philo->last_meal + philo->data->to_die))
 		{
-			message('d', philo);
+			pthread_mutex_lock(&philo->data->tmp);
+			printf("%ld [%d] \033[1;31mdied\e[0m\n", get_time(),philo->index);
+			pthread_mutex_unlock(&philo->data->program);
 			break;
 		}
-	
 	}
 	return (NULL);
 }
@@ -71,33 +67,20 @@ void	*routine(void *tmp)
 	pthread_detach(philo->data->check);
 	while (1)
 	{
-		philo->last_meal = get_time();
 		pthread_mutex_lock(&philo->data->fork[philo->index - 1]);
 		pthread_mutex_lock(&philo->data->fork[(philo->index) % philo->data->numofphils]);
-		message('f', philo);
-		message('f', philo);
-		message('e', philo);
-		// printf("%ld [%d] has taken a \033[1;34mfork\e[0m\n", get_time(),philo->index);
-		// printf("%ld [%d] has taken a \033[1;34mfork\e[0m\n", get_time(),philo->index);
-		// printf("%ld [%d] is \033[1;34meating\e[0m\n",get_time() ,philo->index);
-		philo->eat_times--;
+		message('F', philo);
+		message('F', philo);
+		message('E', philo);
+		// philo->eat_times--;
+		philo->last_meal = get_time();
 		usleep(philo->data->to_eat * 1000);
 		pthread_mutex_unlock(&philo->data->fork[philo->index - 1]);
 		pthread_mutex_unlock(&philo->data->fork[(philo->index) % philo->data->numofphils]);
-		// if(philo->eat_times == 0)
-		// {
-		// 	count++;
-		// 	break;
-		// }
-		philo->last_meal = get_time();
-		message('s', philo);
-		// printf("%ld [%d] is \033[1;34msleeping\e[0m\n", get_time(),philo->index);
+		message('S', philo);
 		usleep(philo->data->to_sleep * 1000);
-		message('t', philo);
-		// printf("%ld [%d] is \033[1;34mthinking\e[0m\n", get_time(),philo->index);
+		message('T', philo);
 	}
-	// printf("\033[1;32mall philosophers ate their meals\e[0m\n");
-	// pthread_mutex_unlock(&philo->data->program);
 	return NULL;
 }
 int	execute(t_philos *philos)
@@ -119,10 +102,11 @@ int	execute(t_philos *philos)
 	while(++i < philos->data->numofphils)
 		pthread_detach(philo[i]);
 	pthread_mutex_lock(&philos->data->program);
-	// pthread_mutex_unlock(&philos->data->program);
+	pthread_mutex_unlock(&philos->data->program);
 	i = -1;
 	while(++i < philos->data->numofphils)
 		pthread_mutex_destroy(&philos->data->fork[i]);
+	pthread_mutex_unlock(&philos->data->tmp);
 	i = -1;
 	return (0);
 }

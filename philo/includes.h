@@ -14,6 +14,7 @@ typedef struct s_data
 {
     long to_die;
     pthread_mutex_t program;
+    pthread_mutex_t tmp;
     pthread_mutex_t msg;
     int numofphils;
     int to_eat;
