@@ -12,12 +12,14 @@
 
 typedef struct s_data
 {
-    int to_die;
+    long to_die;
+    pthread_mutex_t program;
+    pthread_mutex_t msg;
     int numofphils;
     int to_eat;
     int to_sleep;
-    int eat_times;
     long current_time;
+    pthread_t check;
     pthread_mutex_t *fork;
 } t_data;
 
@@ -25,13 +27,17 @@ typedef struct s_philos
 {
     t_data *data;
     int index;
-    long die_time;
+    int is_eating;
+    int eat_times;
+    long last_meal;
 }   t_philos;
 
+void    message(char msg, t_philos *philo);
 long	get_time(void);
 int	execute(t_philos *philos);
 int	ft_atoi(const char *str);
 t_philos	*parsing(char **av, t_data *tmp);
+void    *check_death(void *ptr);
 
 
 #	endif
