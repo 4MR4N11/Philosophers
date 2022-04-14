@@ -6,7 +6,7 @@
 /*   By: kel-amra <kel-amra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 20:25:36 by kel-amra          #+#    #+#             */
-/*   Updated: 2022/03/23 20:29:18 by kel-amra         ###   ########.fr       */
+/*   Updated: 2022/04/14 20:11:50 by kel-amra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,16 +47,16 @@ int	ft_atoi(const char *str)
 	i = ft_sign(str);
 	if (i == -1)
 		return (-1);
-	while (str[i] != '\0' && (str[i] <= 57 && str[i] >= 48))
+	while (str[i] != '\0')
 	{
-		if (str[i] >= 48 && str[i] <= 57)
+		if (ft_isdigit(str[i]))
 		{
 			nb = nb + (str[i] - 48);
-			if (str[i + 1] != '\0' && str[i + 1] <= 57 && str[i + 1] >= 48)
+			if (str[i + 1] != '\0' && (str[i + 1] <= 57 && str[i + 1] >= 48))
 				nb = nb * 10;
 		}
 		else
-			return (nb);
+			return (-1);
 		i++;
 	}
 	i = ft_skip_space(str);

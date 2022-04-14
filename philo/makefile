@@ -1,7 +1,9 @@
 SRCS =	philo.c\
 		parser.c\
 		ft_atoi.c\
-		executor.c
+		executor.c\
+		ft_isdigit.c\
+		routine.c
 
 NAME = philo
 
