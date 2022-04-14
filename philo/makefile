@@ -13,10 +13,10 @@ FLAGS = -Wall -Wextra -Werror
 
 all : $(NAME)
 
-$(NAME) : $(LIBFT) $(OBJECT) $(HEADER)
+$(NAME) : $(LIBFT) $(OBJECT)
 			gcc $(FLAGS) $(OBJECT) -o $(NAME)
 
-%.o : %.c
+%.o : %.c $(HEADER)
 			gcc $(FLAGS) -c $<
 
 clean :
