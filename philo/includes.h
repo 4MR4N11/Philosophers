@@ -6,7 +6,7 @@
 /*   By: kel-amra <kel-amra@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/14 21:22:00 by kel-amra          #+#    #+#             */
-/*   Updated: 2022/04/14 23:27:02 by kel-amra         ###   ########.fr       */
+/*   Updated: 2022/04/15 22:37:09 by kel-amra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,6 @@ typedef struct s_philos
 {
 	t_data	*data;
 	int		index;
-	int		is_eating;
 	int		numofmeals;
 	long	last_meal;
 }	t_philos;
@@ -50,7 +49,6 @@ typedef struct s_philos
 void		message(char msg, t_philos *philo);
 long		get_time(void);
 int			execute(t_philos *philos);
-void		free_data(t_philos	*data, pthread_t *philos_t);
 int			ft_atoi(const char *str);
 t_philos	*parsing(char **av, t_data *tmp);
 void		meals_checker(t_philos *philos);
@@ -58,5 +56,6 @@ void		*routine_caller(void *tmp);
 void		*check_death(void *ptr);
 int			ft_isdigit(int c);
 int			get_data(char **av, t_data *tmp);
+void		mutex_destroyer(t_philos *philos, pthread_t *philo);
 
 #	endif
